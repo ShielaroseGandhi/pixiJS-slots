@@ -82,8 +82,8 @@
       bottomBorder.drawRect(0, app.screen.height - margin, app.screen.width, margin);
 
       app.stage.addChild(leftBorder);
-      app.stage.addChild(rightBorder);
       app.stage.addChild(bottomBorder);
+
 
 
       // Top Border
@@ -97,7 +97,20 @@
       playText.y = Math.round((margin - playText.height) / 2);
       top.addChild(playText);
 
+      // Add ClickMe Text
+      const clickMe = new PIXI.Text("Click Me");
+      clickMe.style = {fill: "white", fontSize: 40};
+      clickMe.x = Math.round((top.width - clickMe.height));
+      clickMe.y = Math.round((margin + clickMe.width));
+      clickMe.anchor.x = 0.5;
+      clickMe.anchor.y = 0.5;
+      clickMe.angle = 90;
+      rightBorder.addChild(clickMe);
+
+
       app.stage.addChild(top);
+      app.stage.addChild(rightBorder);
+
 
       // Set the interactivity.
       rightBorder.interactive = true;
