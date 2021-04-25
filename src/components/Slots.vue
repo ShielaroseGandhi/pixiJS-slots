@@ -1,11 +1,18 @@
 <template>
   <div>
-    <button @click="startPlay" class="lever" :class="{'running': running}"></button>
+    <button @click="startPlay" class="lever" id="lever" :class="{'running': running}"></button>
   </div>
 </template>
 
 <script>
   import * as PIXI from 'pixi.js'
+  import gsap from "gsap";
+
+  // or all tools are exported from the "all" file (excluding bonus plugins):
+  import { Draggable } from "gsap/Draggable";
+
+  // don't forget to register plugins
+  gsap.registerPlugin(Draggable);
 
   export default {
     name: 'Slots',
@@ -102,15 +109,15 @@
         playText.y = Math.round((margin - playText.height) / 2);
         top.addChild(playText);
 
-        // Add ClickMe Text
-        const clickMe = new PIXI.Text("Click Me");
-        clickMe.style = {fill: "white", fontSize: 40};
-        clickMe.x = Math.round((top.width - clickMe.height));
-        clickMe.y = Math.round((margin + clickMe.width));
-        clickMe.anchor.x = 0.5;
-        clickMe.anchor.y = 0.5;
-        clickMe.angle = 90;
-        rightBorder.addChild(clickMe);
+        // // Add ClickMe Text
+        // const clickMe = new PIXI.Text("Click Me");
+        // clickMe.style = {fill: "white", fontSize: 40};
+        // clickMe.x = Math.round((top.width - clickMe.height));
+        // clickMe.y = Math.round((margin + clickMe.width));
+        // clickMe.anchor.x = 0.5;
+        // clickMe.anchor.y = 0.5;
+        // clickMe.angle = 90;
+        // rightBorder.addChild(clickMe);
 
 
         app.stage.addChild(top);
@@ -118,11 +125,11 @@
 
 
         // Set the interactivity.
-        rightBorder.interactive = true;
-        rightBorder.buttonMode = true;
-        rightBorder.addListener('pointerdown', () => {
-          this.startPlay();
-        });
+        // rightBorder.interactive = true;
+        // rightBorder.buttonMode = true;
+        // rightBorder.addListener('pointerdown', () => {
+        //   this.startPlay();
+        // });
 
         // Listen for animate update.
         app.ticker.add((delta) => {
@@ -179,6 +186,7 @@
         // Backout function from tweenjs.
         // https://github.com/CreateJS/TweenJS/blob/master/src/tweenjs/Ease.js
 
+
     },
     methods: {
       // Function to start playing.
@@ -192,6 +200,11 @@
           const target = r.position + 10 + i * 5 + extra;
           const time = 2500 + i * 600 + extra * 600;
           this.tweenTo(r, 'position', target, time, this.backout(0.5), null, i === this.reels.length - 1 ? this.reelsComplete : null);
+
+          // GSAP
+          let tl = gsap.timeline();
+          tl.fromTo("#lever", {rotationX: 0, transformOrigin:"0 90%"}, {rotationX: 65, duration: 0.4, ease: "linear"})
+                  .fromTo("#lever", {rotationX: 65, transformOrigin:"0 90%"}, {rotationX: 0, duration: 10, ease: "elastic"})
         }
       },
       reelsComplete() {
@@ -223,15 +236,31 @@
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
   .lever {
-    height: 500px;
-    width: 20px;
-    background: grey;
+    height: 400px;
+    width: 40px;
+    background: #101010;
     border: 0;
-    transition: all 0.5s ease;
+    position: relative;
+    cursor: pointer;
+    -webkit-border-radius: 25px;
+    -moz-border-radius: 25px;
+    border-radius: 25px;
+    outline: none;
   }
 
-  .lever.running {
-    transform: rotateX(40deg);
-    transition: all 0.5s ease;
+  .lever::before {
+    content: '';
+    width: 125px;
+    height: 125px;
+    position: absolute;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    border-radius: 50%;
+    top: 0;
+    left: 0;
+    transform: translate(-33%, -50%);
+    background-color: rgb(231, 43, 49);
+    box-shadow: inset -25px -15px 40px rgba(0,0,0,.3);
+    background-image: linear-gradient(-45deg, rgba(255,255,220,.3) 0%, transparent 100%);
   }
 </style>
