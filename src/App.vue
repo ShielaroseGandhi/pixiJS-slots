@@ -47,7 +47,7 @@ export default {
 }
   body {
     display: flex;
-    flex-direction: column;
+    flex-direction: row-reverse;
     justify-content: center;
     align-items: center;
   }

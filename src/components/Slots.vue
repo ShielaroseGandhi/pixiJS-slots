@@ -1,8 +1,6 @@
 <template>
   <div>
-    <button @click="startPlay">
-      SPIN
-    </button>
+    <button @click="startPlay" class="lever" :class="{'running': running}"></button>
   </div>
 </template>
 
@@ -224,4 +222,16 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+  .lever {
+    height: 500px;
+    width: 20px;
+    background: grey;
+    border: 0;
+    transition: all 0.5s ease;
+  }
+
+  .lever.running {
+    transform: rotateX(40deg);
+    transition: all 0.5s ease;
+  }
 </style>
