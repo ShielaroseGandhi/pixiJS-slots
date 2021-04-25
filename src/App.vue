@@ -1,15 +1,18 @@
 <template>
   <div id="app">
+    <Hero />
     <Slots />
   </div>
 </template>
 
 <script>
 import Slots from './components/Slots.vue'
+import Hero from "./components/Hero";
 
 export default {
   name: 'App',
   components: {
+    Hero,
     Slots
   }
 }
@@ -24,4 +27,9 @@ export default {
   color: #2c3e50;
   margin-top: 60px;
 }
+  body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
 </style>
