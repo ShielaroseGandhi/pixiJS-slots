@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h1>Sorry! Please use a screen larger than 800px :)</h1>
+        <h1>Sorry! Please use a screen larger than 900px :)</h1>
     </div>
 </template>
 

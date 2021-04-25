@@ -30,7 +30,7 @@ export default {
   },
   methods:{
     checkScreen(){
-      this.showApp = window.innerWidth > 800;
+      this.showApp = window.innerWidth > 900;
     }
   }
 }
