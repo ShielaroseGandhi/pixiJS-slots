@@ -1,7 +1,11 @@
 <template>
   <div id="app">
-    <Hero />
-    <Slots />
+    <Hero
+      v-if="!showApp"
+    />
+    <Slots
+      v-if="showApp"
+    />
   </div>
 </template>
 
@@ -14,6 +18,20 @@ export default {
   components: {
     Hero,
     Slots
+  },
+  data(){
+    return {
+      showApp: null,
+    }
+  },
+  mounted(){
+    this.checkScreen();
+    window.addEventListener("resize", this.checkScreen)
+  },
+  methods:{
+    checkScreen(){
+      this.showApp = window.innerWidth > 800;
+    }
   }
 }
 </script>
