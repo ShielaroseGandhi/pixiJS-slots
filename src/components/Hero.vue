@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h1>Sorry! Please use a screen larger than 900px :)</h1>
+        <h1>Jackpot!</h1>
     </div>
 </template>
 
@@ -9,3 +9,9 @@
         name: "Hero"
     }
 </script>
+
+<style>
+    h1 {
+        color: white;
+    }
+</style>
