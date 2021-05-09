@@ -59,13 +59,17 @@ export default {
     margin: 0;
   }
 
+  canvas {
+    z-index: 0;
+  }
+
   canvas#coinrain {
     display: block;
     pointer-events:none;
     position: absolute;
     top: 0;
     left: 0;
-    z-index: 1;
+    z-index: 12;
     width: 100%;
   }
 </style>
