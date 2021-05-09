@@ -389,7 +389,7 @@
     height: calc(100vw / (800/600) - 175px);
     max-height: 400px;
     width: 18px;
-    background: #101010;
+    background: #555555;
     border: 0;
     position: relative;
     cursor: pointer;
@@ -398,6 +398,7 @@
     border-radius: 25px;
     outline: none;
     margin-top: 20px;
+    z-index: 10;
   }
 
   .lever::before {
@@ -420,6 +421,7 @@
     justify-content: center;
     align-items: center;
     font-weight: bold;
+    z-index: 11;
   }
 
   @media (hover: hover) {
