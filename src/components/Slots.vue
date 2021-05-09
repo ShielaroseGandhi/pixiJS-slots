@@ -23,6 +23,7 @@
         tweening: [],
         width: 800,
         height: 500,
+        sprites: {}
       }
     },
     props: {
@@ -53,17 +54,16 @@
 
         // Load sprites
         app.loader
-          .add([
-            "/assets/images/seven-black.PNG",
-            "/assets/images/triple7-yellow.PNG",
-            "/assets/images/seven-text_transparent.PNG",
-            "/assets/images/seven-yellow.PNG",
-            "/assets/images/triple7-black.PNG",
-          ])
+          .add('one', '/assets/images/seven-black.PNG')
+          .add('two', '/assets/images/triple7-yellow.PNG')
+          .add('three', '/assets/images/seven-text_transparent.PNG')
+          .add('four', '/assets/images/seven-yellow.PNG')
+          .add('five', '/assets/images/triple7-black.PNG')
           .load(onAssetsLoaded);
 
         // onAssetsLoaded handler builds the example.
         function onAssetsLoaded() {
+
           // Create different slot symbols.
           const slotTextures = [
             PIXI.Texture.from('/assets/images/seven-text_transparent.PNG'),
@@ -97,11 +97,29 @@
 
             // Build the symbols
             for (let j = 0; j < 5; j++) {
-              const symbol = new PIXI.Sprite(slotTextures[Math.floor(Math.random() * slotTextures.length)]);
+              const symbol = new PIXI.Sprite(slotTextures[j]);
               // Scale the symbol to fit symbol area.
               symbol.y = j * SYMBOL_SIZE;
               symbol.scale.x = symbol.scale.y = Math.min(SYMBOL_SIZE / symbol.width, SYMBOL_SIZE / symbol.height);
               symbol.x = Math.round((SYMBOL_SIZE - symbol.width + margin / 2) / 2);
+              switch(j) {
+                case 0:
+                  symbol.name = "one";
+                  break;
+                case 1:
+                  symbol.name = "two";
+                  break;
+                case 2:
+                  symbol.name = "three";
+                  break;
+                case 3:
+                  symbol.name = "four";
+                  break;
+                case 4:
+                  symbol.name = "five";
+                  break;
+                default:
+              }
 
               reel.symbols.push(symbol);
               rc.addChild(symbol);
@@ -185,6 +203,7 @@
                 //   s.x = Math.round((SYMBOL_SIZE - s.width) / 2);
                 // }
               }
+
             }
           });
 
@@ -233,7 +252,7 @@
 
       window.addEventListener("resize", function(){
         let w;
-        let h;
+        let h;å
         if (window.innerWidth <= 992) {
           w = window.innerWidth - 100;
           h = window.innerWidth / (800/500) - 100;
@@ -266,6 +285,25 @@
       },
       reelsComplete() {
         this.running = false;
+        this.checkWin()
+      },
+      checkWin(){
+        let array = [];
+
+        this.reels.forEach((reel, index) => {
+          this.reels[index].symbols.forEach(symbol => {
+            if(symbol.position._y < 131 && symbol.position._y > 129.8) {
+              array.push(symbol.name)
+            }
+          });
+        });
+
+        const allEqual = (arr) => arr.every( v => v === arr[0] );
+
+        if(allEqual(array))
+        {
+          this.coins('body');
+        }
       },
       tweenTo(object, property, target, time, easing, onchange, oncomplete) {
         const tween = {
@@ -286,6 +324,61 @@
       backout(amount) {
         return (t) => (--t * t * ((amount + 1) * t + amount) + 1);
       },
+      coins(el) {
+        //http://jsfiddle.net/z3roj35k/1/
+        const element = document.querySelector(el);
+        let canvas = document.createElement('canvas'),
+                ctx = canvas.getContext('2d'),
+                focused = false;
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        canvas.id = 'coinrain';
+
+        const coin = new Image();
+        coin.src = 'http://i.imgur.com/5ZW2MT3.png';
+        // 440 wide, 40 high, 10 states
+        coin.onload = function () {
+          element.appendChild(canvas);
+          focused = true;
+          drawloop();
+        };
+        let coins = [];
+
+        function drawloop() {
+          if (focused) {
+            requestAnimationFrame(drawloop);
+          }
+
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+          if (Math.random() < .3) {
+            coins.push({
+              x: Math.random() * canvas.width | 0,
+              y: -50,
+              dy: 3,
+              s: 0.5 + Math.random(),
+              state: Math.random() * 10 | 0
+            })
+          }
+          let i = coins.length;
+          while (i--) {
+            let x = coins[i].x;
+            let y = coins[i].y;
+            let s = coins[i].s;
+            let state = coins[i].state;
+            coins[i].state = (state > 9) ? 0 : state + 0.1;
+            coins[i].dy += 0.3
+            coins[i].y += coins[i].dy;
+
+            ctx.drawImage(coin, 44 * Math.floor(state), 0, 44, 40, x, y, 44 * s, 40 * s);
+
+            if (y > canvas.height) {
+              coins.splice(i, 1);
+            }
+          }
+        } // END of function
+      }
     }
   }
 </script>
@@ -307,15 +400,8 @@
     margin-top: 20px;
   }
 
-  @media screen and (min-width: 768px) {
-    .lever {
-      width: 40px;
-      margin-top: 40px;
-    }
-  }
-
   .lever::before {
-    content: '';
+    content: 'Tap here';
     width: 12vw;
     height: 12vw;
     max-width: 125px;
@@ -330,5 +416,22 @@
     background-color: #FFCA05;
     box-shadow: inset -25px -15px 40px rgba(0,0,0,.3);
     background-image: linear-gradient(-45deg, rgba(255,255,220,.3) 0%, transparent 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+  }
+
+  @media (hover: hover) {
+    .lever::before {
+      content: '';
+    }
+  }
+
+  @media screen and (min-width: 768px) {
+    .lever {
+      width: 40px;
+      margin-top: 40px;
+    }
   }
 </style>

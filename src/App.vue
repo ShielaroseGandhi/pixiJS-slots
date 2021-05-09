@@ -1,8 +1,6 @@
 <template>
   <div id="app">
-    <Hero
-      v-if="!showApp"
-    />
+    <!--<Hero/>-->
     <Slots/>
   </div>
 </template>
@@ -23,12 +21,20 @@ export default {
     }
   },
   mounted(){
+    document.body.addEventListener("click", this.stopCoins);
+
     this.checkScreen();
     // window.addEventListener("resize", this.checkScreen)
   },
   methods:{
     checkScreen(){
       // this.showApp = window.innerWidth > 900;
+    },
+    stopCoins(){
+      const coinrain = document.getElementById('coinrain');
+      if(coinrain){
+        document.body.removeChild(coinrain)
+      }
     }
   }
 }
@@ -49,7 +55,17 @@ export default {
     flex-direction: row-reverse;
     justify-content: center;
     align-items: center;
-    /*background: #050505;*/
+    background: #050505;
     margin: 0;
+  }
+
+  canvas#coinrain {
+    display: block;
+    pointer-events:none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    width: 100%;
   }
 </style>
