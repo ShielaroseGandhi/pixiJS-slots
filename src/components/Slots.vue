@@ -21,6 +21,8 @@
         reels: [],
         running: false,
         tweening: [],
+        width: 800,
+        height: 500,
       }
     },
     props: {
@@ -29,13 +31,15 @@
         const _self = this;
 
         const app = new PIXI.Application({
-          backgroundColor: 0xefefef
+          backgroundColor: 0xefefef,
+          width: _self.width,
+          height: _self.height
         });
 
         document.body.appendChild(app.view);
 
         const REEL_WIDTH = 216;
-        const SYMBOL_SIZE = 150;
+        const SYMBOL_SIZE = 130;
         const margin = (app.screen.height - SYMBOL_SIZE * 3);
 
         const style = new PIXI.TextStyle({
@@ -73,6 +77,7 @@
           // const reels = [];
           const reelContainer = new PIXI.Container();
           reelContainer.y = margin / 2;
+          reelContainer.x = margin / 4;
           // 3 reels
           for (let i = 0; i < 3; i++) {
             const rc = new PIXI.Container();
@@ -92,7 +97,7 @@
 
             // Build the symbols
             for (let j = 0; j < 5; j++) {
-              const symbol = new PIXI.Sprite(slotTextures[j]);
+              const symbol = new PIXI.Sprite(slotTextures[Math.floor(Math.random() * slotTextures.length)]);
               // Scale the symbol to fit symbol area.
               symbol.y = j * SYMBOL_SIZE;
               symbol.scale.x = symbol.scale.y = Math.min(SYMBOL_SIZE / symbol.width, SYMBOL_SIZE / symbol.height);
@@ -130,10 +135,10 @@
           top.drawRect(0, 0, app.screen.width, margin);
 
           // Add Jackpot Text
-          const playText = new PIXI.Text("JACKPOT", style);
-          playText.x = Math.round((top.width - playText.width) / 2);
-          playText.y = Math.round((margin - playText.height) / 2);
-          top.addChild(playText);
+          // const playText = new PIXI.Text("JACKPOT", style);
+          // playText.x = Math.round((top.width - playText.width) / 2);
+          // playText.y = Math.round((margin - playText.height) / 2);
+          // top.addChild(playText);
 
           // // Add ClickMe Text
           // const clickMe = new PIXI.Text("Click Me");
@@ -213,6 +218,32 @@
           // https://github.com/CreateJS/TweenJS/blob/master/src/tweenjs/Ease.js
 
         } //END ONASSETSLOADED FUNCTION
+
+      let w;
+      let h;
+      if (window.innerWidth <= 992) {
+        w = window.innerWidth - 100;
+        h = window.innerWidth / (800/500) - 100;
+      } else {
+        w = this.width;
+        h = this.height;
+      }
+      app.renderer.view.style.width = w + 'px';
+      app.renderer.view.style.height = h + 'px';
+
+      window.addEventListener("resize", function(){
+        let w;
+        let h;
+        if (window.innerWidth <= 992) {
+          w = window.innerWidth - 100;
+          h = window.innerWidth / (800/500) - 100;
+        } else {
+          w = this.width;
+          h = this.height;
+        }
+        app.renderer.view.style.width = w + 'px';
+        app.renderer.view.style.height = h + 'px';
+      });
     },
     methods: {
       // Function to start playing.
@@ -255,10 +286,6 @@
       backout(amount) {
         return (t) => (--t * t * ((amount + 1) * t + amount) + 1);
       },
-      update() {
-        requestAnimationFrame(update);
-        renderer.render(stage);
-      }
     }
   }
 </script>
@@ -266,8 +293,9 @@
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
   .lever {
-    height: 400px;
-    width: 40px;
+    height: calc(100vw / (800/600) - 175px);
+    max-height: 400px;
+    width: 18px;
     background: #101010;
     border: 0;
     position: relative;
@@ -276,19 +304,29 @@
     -moz-border-radius: 25px;
     border-radius: 25px;
     outline: none;
+    margin-top: 20px;
+  }
+
+  @media screen and (min-width: 768px) {
+    .lever {
+      width: 40px;
+      margin-top: 40px;
+    }
   }
 
   .lever::before {
     content: '';
-    width: 125px;
-    height: 125px;
+    width: 12vw;
+    height: 12vw;
+    max-width: 125px;
+    max-height: 125px;
     position: absolute;
     -webkit-border-radius: 50%;
     -moz-border-radius: 50%;
     border-radius: 50%;
     top: 0;
-    left: 0;
-    transform: translate(-33%, -50%);
+    left: 50%;
+    transform: translate(-50%, -50%);
     background-color: #FFCA05;
     box-shadow: inset -25px -15px 40px rgba(0,0,0,.3);
     background-image: linear-gradient(-45deg, rgba(255,255,220,.3) 0%, transparent 100%);
