@@ -55,7 +55,7 @@ export default {
     flex-direction: row-reverse;
     justify-content: center;
     align-items: center;
-    background: #050505;
+    background: #272727;
     margin: 0;
   }
 
